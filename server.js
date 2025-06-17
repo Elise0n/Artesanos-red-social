@@ -106,27 +106,16 @@ app.use((err, req, res, next) => {
 })
 
 // Iniciar servidor
-console.log("DB:", process.env.DB_HOST);
-
-const PORT = process.env.PORT || 8100;
-http.listen(PORT, () => {
-  io.on('connection', socket => {
-    console.log('🟢 Usuario conectado a comentarios');
-
-    socket.on('nuevo_comentario', data => {
-      socket.broadcast.emit('comentario_recibido', data);
-    });
-
-    socket.on('disconnect', () => {
-      console.log('🔴 Usuario desconectado de comentarios');
-    });
-  });
-});
+const PORT = process.env.PORT;
+server.listen(PORT, () => {
+  console.log(`🚀 Servidor corriendo en puerto ${PORT}`)
+  console.log(`📱 Aplicación disponible en http://localhost:${PORT}`)
+})
 
 // Manejo de cierre graceful
 process.on("SIGTERM", () => {
   console.log("Cerrando servidor...")
-  http.close(() => {
+  server.close(() => {
     console.log("Servidor cerrado")
     process.exit(0)
   })
