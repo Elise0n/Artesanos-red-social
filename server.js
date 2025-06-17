@@ -106,7 +106,7 @@ app.use((err, req, res, next) => {
 })
 
 // Iniciar servidor
-const PORT = process.env.PORT || 8100
+const PORT = process.env.PORT
 server.listen(PORT, () => {
   console.log(`🚀 Servidor corriendo en puerto ${PORT}`)
   console.log(`📱 Aplicación disponible en http://localhost:${PORT}`)
