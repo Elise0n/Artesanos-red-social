@@ -1,7 +1,7 @@
 {
-  "name": "artesanos-social-network",
+  "name": "artesanos-red-social",
   "version": "1.0.0",
-  "description": "Red social para artesanos - Plataforma completa con backend organizado",
+  "description": "Red social para artesanos",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -9,22 +9,29 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "express": "^4.18.2",
-    "mysql2": "^3.6.0",
     "bcrypt": "^5.1.0",
-    "express-session": "^1.17.3",
-    "multer": "^1.4.5-lts.1",
-    "pug": "^3.0.2",
-    "socket.io": "^4.7.2",
-    "dotenv": "^16.3.1",
-    "express-validator": "^7.0.1",
     "connect-flash": "^0.1.1",
-    "method-override": "^3.0.0"
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "express-validator": "^7.0.1",
+    "method-override": "^3.0.0",
+    "multer": "^1.4.5-lts.1",
+    "mysql2": "^3.6.0",
+    "pug": "^3.0.2",
+    "socket.io": "^4.7.2"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1"
+    "nodemon": "^3.1.10"
   },
-  "keywords": ["social-network", "artesanos", "nodejs", "express", "mysql", "pug"],
+  "keywords": [
+    "social-network",
+    "artesanos",
+    "nodejs",
+    "express",
+    "mysql",
+    "pug"
+  ],
   "author": "Artesanos.com Team",
   "license": "MIT"
 }
