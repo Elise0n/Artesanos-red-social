@@ -22,7 +22,7 @@ const upload = multer({ storage })
 router.post("/perfil", requireAuth, upload.single("imagen_perfil"), (req, res) => {
   if (!req.file) {
     req.flash("error", "Debes seleccionar una imagen.")
-    return res.redirect("back")
+    return res.redirect("/perfil")
   }
 
   const nuevaImagen = req.file.filename
@@ -39,7 +39,7 @@ router.post("/perfil", requireAuth, upload.single("imagen_perfil"), (req, res) =
         req.session.user.imagen_perfil = nuevaImagen
         req.flash("success", "Imagen actualizada correctamente.")
       }
-      res.redirect("back")
+      res.redirect("/perfil")
     }
   )
 })
