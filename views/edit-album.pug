@@ -1,0 +1,30 @@
+extends layout
+
+block content
+  .row.justify-content-center
+    .col-md-6
+      .card
+        .card-header
+          h3 Editar Álbum
+        .card-body
+          form(method="POST", action=`/album/${album.id_album}?_method=PUT`)
+            .mb-3
+              label.form-label(for="titulo") Título del Álbum *
+              input.form-control(type="text", id="titulo", name="titulo", required, value=album.titulo)
+            
+            .mb-3
+              label.form-label(for="descripcion") Descripción
+              textarea.form-control(id="descripcion", name="descripcion", rows="3")= album.descripcion
+            
+            .mb-3
+              label.form-label(for="visibilidad") Visibilidad
+              select.form-control(id="visibilidad", name="visibilidad")
+                option(value="publico", selected=album.visibilidad === 'publico') Público - Todos pueden ver el álbum
+                option(value="amigos", selected=album.visibilidad === 'amigos') Solo Amigos - Solo tus amigos pueden ver el álbum
+                option(value="privado", selected=album.visibilidad === 'privado') Privado - Solo tú puedes ver el álbum
+            
+            .d-grid.gap-2.d-md-flex.justify-content-md-end
+              a.btn.btn-outline-secondary(href=`/album/${album.id_album}`) Cancelar
+              button.btn.btn-primary(type="submit")
+                i.fas.fa-save.me-2
+                | Guardar Cambios

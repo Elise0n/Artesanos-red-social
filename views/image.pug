@@ -1,0 +1,95 @@
+extends layout
+
+block content
+  .row
+    .col-md-8
+      .card
+        .card-header.d-flex.align-items-center
+          if image.imagen_perfil
+            img.rounded-circle.me-3(src=image.imagen_perfil, width="40", height="40")
+          else
+            i.fas.fa-user-circle.fa-2x.me-3.text-muted
+          div
+            h6.mb-0= image.nombre + " " + image.apellido
+            small.text-muted Álbum: #{image.album_titulo}
+        
+        img.card-img-top(src=image.ruta_archivo, alt=image.titulo, style="max-height: 600px; object-fit: contain;")
+        
+        .card-body
+          h5.card-title= image.titulo || "Sin título"
+          if image.etiquetas
+            .mb-3
+              each etiqueta in image.etiquetas.split(',')
+                span.badge.bg-secondary.me-1= "#" + etiqueta
+          
+          .d-flex.justify-content-between.align-items-center.mb-3
+            div
+              button.btn.btn-outline-primary.btn-sm.me-2
+                i.fas.fa-heart.me-1
+                | Me gusta
+              span.text-muted= comments.length + " comentario" + (comments.length !== 1 ? "s" : "")
+            
+            a.btn.btn-outline-secondary.btn-sm(href=`/profile/${image.autor_id}`) Ver Perfil
+
+    .col-md-4
+      .card
+        .card-header
+          h6.mb-0 Comentarios
+        .card-body
+          form#commentForm.mb-3
+            .mb-2
+              textarea.form-control(placeholder="Escribe un comentario...", rows="3", required)#commentText
+            button.btn.btn-primary.btn-sm(type="submit")
+              i.fas.fa-paper-plane.me-1
+              | Comentar
+          
+          .comments-list
+            if comments && comments.length > 0
+              each comment in comments
+                .d-flex.mb-3
+                  if comment.imagen_perfil
+                    img.rounded-circle.me-2(src=comment.imagen_perfil, width="32", height="32")
+                  else
+                    i.fas.fa-user-circle.fa-lg.me-2.text-muted
+                  div
+                    h6.mb-1= comment.nombre + " " + comment.apellido
+                    p.mb-0= comment.contenido
+            else
+              .text-center.text-muted
+                i.fas.fa-comment-slash.mb-2
+                p Sé el primero en comentar
+
+  script.
+    document.getElementById('commentForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const commentText = document.getElementById('commentText');
+      const content = commentText.value.trim();
+      
+      if (!content) {
+        alert('Por favor escribe un comentario');
+        return;
+      }
+      
+      const imageId = #{image.id_imagen};
+      
+      fetch(`/image/${imageId}/comment`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ contenido: content })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          location.reload();
+        } else {
+          alert(data.error || 'Error al enviar comentario');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Error al enviar comentario');
+      });
+    });

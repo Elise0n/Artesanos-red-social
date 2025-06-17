@@ -1,0 +1,96 @@
+extends layout
+
+block content
+  .row
+    .col-md-4
+      .card
+        .card-body.text-center
+          if profileUser.imagen_perfil
+            img.rounded-circle.mb-3(src=profileUser.imagen_perfil, width="150", height="150")
+          else
+            i.fas.fa-user-circle.fa-5x.text-muted.mb-3
+          
+          h3= profileUser.nombre + " " + profileUser.apellido
+          p.text-muted= profileUser.email
+          
+          if profileUser.intereses
+            .mb-3
+              h6 Intereses:
+              p= profileUser.intereses
+          
+          if profileUser.antecedentes
+            .mb-3
+              h6 Antecedentes:
+              p= profileUser.antecedentes
+          
+          if !isOwnProfile
+            if !isFriend
+              button.btn.btn-primary#sendFriendRequest(data-user-id=profileUser.id_usuario)
+                i.fas.fa-user-plus.me-2
+                | Enviar Solicitud de Amistad
+            else
+              .badge.bg-success.fs-6
+                i.fas.fa-check.me-1
+                | Amigos
+
+    .col-md-8
+      .d-flex.justify-content-between.align-items-center.mb-4
+        h3 Álbumes
+        if isOwnProfile
+          a.btn.btn-primary(href="/create-album")
+            i.fas.fa-plus.me-2
+            | Crear Álbum
+      
+      if albums && albums.length > 0
+        .row
+          each album in albums
+            .col-md-6.mb-4
+              .card
+                .card-body
+                  h5.card-title= album.titulo
+                  if album.descripcion
+                    p.card-text= album.descripcion
+                  p.text-muted
+                    i.fas.fa-images.me-1
+                    = album.total_images + " imagen" + (album.total_images !== 1 ? "es" : "")
+                  a.btn.btn-outline-primary(href=`/album/${album.id_album}`) Ver Álbum
+      else
+        .text-center.py-5
+          i.fas.fa-folder-open.fa-3x.text-muted.mb-3
+          h4.text-muted No hay álbumes
+          if isOwnProfile
+            p.text-muted Crea tu primer álbum para organizar tus imágenes
+            a.btn.btn-primary(href="/create-album") Crear Primer Álbum
+
+  script.
+    document.getElementById('sendFriendRequest')?.addEventListener('click', function() {
+      const userId = this.dataset.userId;
+      const button = this;
+      
+      button.disabled = true;
+      button.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Enviando...';
+      
+      fetch(`/friend-request/${userId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          button.innerHTML = '<i class="fas fa-check me-2"></i>Solicitud Enviada';
+          button.className = 'btn btn-success';
+        } else {
+          button.innerHTML = '<i class="fas fa-user-plus me-2"></i>Enviar Solicitud de Amistad';
+          button.disabled = false;
+          alert(data.error || 'Error al enviar solicitud');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        button.innerHTML = '<i class="fas fa-user-plus me-2"></i>Enviar Solicitud de Amistad';
+        button.disabled = false;
+        alert('Error al enviar solicitud');
+      });
+    });

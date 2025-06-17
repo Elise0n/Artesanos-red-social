@@ -1,0 +1,46 @@
+extends layout
+
+block content
+  .row.justify-content-center
+    .col-md-6
+      .card
+        .card-header.text-center
+          h3 Registro de Usuario
+        .card-body
+          form(method="POST", enctype="multipart/form-data")
+            .row
+              .col-md-6
+                .mb-3
+                  label.form-label(for="nombre") Nombre *
+                  input.form-control(type="text", id="nombre", name="nombre", required)
+              .col-md-6
+                .mb-3
+                  label.form-label(for="apellido") Apellido *
+                  input.form-control(type="text", id="apellido", name="apellido", required)
+            
+            .mb-3
+              label.form-label(for="email") Email *
+              input.form-control(type="email", id="email", name="email", required)
+            
+            .mb-3
+              label.form-label(for="password") Contraseña *
+              input.form-control(type="password", id="password", name="password", required, minlength="6")
+            
+            .mb-3
+              label.form-label(for="intereses") Intereses
+              textarea.form-control(id="intereses", name="intereses", rows="3", placeholder="Ej: cerámica, textil, joyería...")
+            
+            .mb-3
+              label.form-label(for="antecedentes") Antecedentes
+              textarea.form-control(id="antecedentes", name="antecedentes", rows="3", placeholder="Cuéntanos sobre tu experiencia...")
+            
+            .mb-3
+              label.form-label(for="imagen_perfil") Imagen de Perfil
+              input.form-control(type="file", id="imagen_perfil", name="imagen_perfil", accept="image/*")
+            
+            .d-grid
+              button.btn.btn-primary(type="submit") Registrarse
+          
+          .text-center.mt-3
+            p ¿Ya tienes cuenta? 
+              a(href="/login") Inicia sesión aquí

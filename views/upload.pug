@@ -1,0 +1,52 @@
+extends layout
+
+block content
+  .row.justify-content-center
+    .col-md-8
+      .card
+        .card-header
+          h3 Subir Nueva Imagen
+        .card-body
+          form(method="POST", enctype="multipart/form-data")
+            .mb-3
+              label.form-label(for="imagen") Seleccionar Imagen *
+              input.form-control(type="file", id="imagen", name="imagen", accept="image/*", required)
+            
+            .mb-3
+              label.form-label(for="titulo") Título de la Imagen
+              input.form-control(type="text", id="titulo", name="titulo", placeholder="Ej: Mi nueva creación")
+            
+            .mb-3
+              label.form-label(for="album_id") Álbum *
+              select.form-control(id="album_id", name="album_id", required)
+                option(value="") Seleccionar álbum...
+                each album in albums
+                  option(value=album.id_album)= album.titulo
+              small.form-text.text-muted
+                | ¿No tienes álbumes? 
+                a(href="/create-album") Crea uno aquí
+            
+            .mb-3
+              label.form-label(for="visibilidad") Visibilidad
+              select.form-control(id="visibilidad", name="visibilidad")
+                option(value="publica") Pública - Todos pueden verla
+                option(value="amigos") Solo Amigos - Solo tus amigos pueden verla
+            
+            .mb-3
+              label.form-label Etiquetas
+              .row
+                each tag in tags
+                  .col-md-4.col-sm-6
+                    .form-check
+                      input.form-check-input(type="checkbox", id=`tag_${tag.id_etiqueta}`, name="etiquetas", value=tag.id_etiqueta)
+                      label.form-check-label(for=`tag_${tag.id_etiqueta}`)= tag.nombre
+            
+            .d-grid
+              button.btn.btn-primary(type="submit")
+                i.fas.fa-upload.me-2
+                | Subir Imagen
+          
+          .text-center.mt-3
+            a.btn.btn-outline-secondary(href="/")
+              i.fas.fa-arrow-left.me-2
+              | Volver al Inicio

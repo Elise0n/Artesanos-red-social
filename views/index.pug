@@ -1,0 +1,73 @@
+extends layout
+
+block content
+  .row
+    .col-md-8
+      h2.mb-4 Feed de Imágenes
+      
+      if images && images.length > 0
+        each image in images
+          .card.mb-4
+            .card-header.d-flex.align-items-center
+              if image.imagen_perfil
+                img.rounded-circle.me-3(src=image.imagen_perfil, width="40", height="40")
+              else
+                i.fas.fa-user-circle.fa-2x.me-3.text-muted
+              div
+                h6.mb-0= image.nombre + " " + image.apellido
+                small.text-muted= image.album_titulo
+            
+            img.card-img-top(src=image.ruta_archivo, alt=image.titulo, style="max-height: 500px; object-fit: cover;")
+            
+            .card-body
+              h5.card-title= image.titulo
+              if image.etiquetas
+                .mb-2
+                  each etiqueta in image.etiquetas.split(',')
+                    span.badge.bg-secondary.me-1= "#" + etiqueta
+              
+              .d-flex.justify-content-between.align-items-center
+                div
+                  button.btn.btn-outline-primary.btn-sm.me-2
+                    i.fas.fa-heart.me-1
+                    = image.total_likes || 0
+                  button.btn.btn-outline-secondary.btn-sm
+                    i.fas.fa-comment.me-1
+                    = image.total_comentarios || 0
+                
+                a.btn.btn-primary.btn-sm(href=`/image/${image.id_imagen}`) Ver Detalles
+      else
+        .text-center.py-5
+          i.fas.fa-images.fa-3x.text-muted.mb-3
+          h4.text-muted No hay imágenes para mostrar
+          p.text-muted Sigue a otros artesanos o sube tu primera imagen
+          a.btn.btn-primary(href="/upload") Subir Primera Imagen
+
+    .col-md-4
+      .card
+        .card-header
+          h5.mb-0 Acciones Rápidas
+        .card-body
+          a.btn.btn-primary.w-100.mb-2(href="/upload")
+            i.fas.fa-plus.me-2
+            | Subir Imagen
+          a.btn.btn-outline-primary.w-100.mb-2(href="/create-album")
+            i.fas.fa-folder-plus.me-2
+            | Crear Álbum
+          a.btn.btn-outline-secondary.w-100(href="/search")
+            i.fas.fa-search.me-2
+            | Buscar Usuarios
+
+      .card.mt-4
+        .card-header
+          h5.mb-0 Estadísticas
+        .card-body
+          p.mb-1
+            strong Imágenes subidas: 
+            span.text-primary 0
+          p.mb-1
+            strong Comentarios recibidos: 
+            span.text-primary 0
+          p.mb-0
+            strong Amigos: 
+            span.text-primary 0

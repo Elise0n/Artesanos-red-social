@@ -1,0 +1,194 @@
+extends layout
+
+block content
+  .row
+    .col-12
+      h2.mb-4 Buscar en Artesanos.com
+      
+      form.mb-4(method="GET")
+        .input-group
+          input.form-control(type="text", name="q", placeholder="Buscar usuarios, imágenes o etiquetas...", value=query)
+          button.btn.btn-primary(type="submit")
+            i.fas.fa-search.me-2
+            | Buscar
+
+  if query
+    .row
+      .col-md-6
+        h4.mb-3 Usuarios encontrados
+        if users && users.length > 0
+          each user in users
+            .card.mb-3
+              .card-body
+                .d-flex.align-items-center
+                  if user.imagen_perfil
+                    img.rounded-circle.me-3(src=user.imagen_perfil, width="50", height="50")
+                  else
+                    i.fas.fa-user-circle.fa-2x.me-3.text-muted
+                  div.flex-grow-1
+                    h6.mb-1= user.nombre + " " + user.apellido
+                    p.text-muted.mb-1= user.email
+                    if user.intereses
+                      small.text-muted= user.intereses
+                  button.btn.btn-primary.btn-sm.friend-action-btn(data-user-id=user.id_usuario)
+                    i.fas.fa-spinner.fa-spin.me-1(style="display: none;")
+                    span.btn-text
+                      i.fas.fa-user-plus.me-1
+                      | Agregar
+        else
+          .text-center.py-4
+            i.fas.fa-user-slash.fa-2x.text-muted.mb-2
+            p.text-muted No se encontraron usuarios
+
+      .col-md-6
+        h4.mb-3 Imágenes encontradas
+        if images && images.length > 0
+          each image in images
+            .card.mb-3
+              .row.g-0
+                .col-4
+                  img.img-fluid.rounded-start(src=image.ruta_archivo, alt=image.titulo, style="height: 100px; object-fit: cover;")
+                .col-8
+                  .card-body.p-3
+                    h6.card-title= image.titulo
+                    p.text-muted.mb-1
+                      small Por: #{image.nombre} #{image.apellido}
+                    a.btn.btn-outline-primary.btn-sm(href=`/image/${image.id_imagen}`) Ver Imagen
+        else
+          .text-center.py-4
+            i.fas.fa-image.fa-2x.text-muted.mb-2
+            p.text-muted No se encontraron imágenes
+  else
+    .text-center.py-5
+      i.fas.fa-search.fa-3x.text-muted.mb-3
+      h4.text-muted Busca usuarios, imágenes o etiquetas
+      p.text-muted Usa la barra de búsqueda para encontrar contenido en Artesanos.com
+
+script.
+  // Verificar estado de amistad para cada usuario en los resultados
+  document.addEventListener('DOMContentLoaded', function() {
+    const friendButtons = document.querySelectorAll('.friend-action-btn');
+    
+    friendButtons.forEach(button => {
+      const userId = button.dataset.userId;
+      checkFriendshipStatus(userId, button);
+    });
+  });
+
+  function checkFriendshipStatus(userId, button) {
+    fetch(`/api/friendship-status/${userId}`)
+      .then(response => response.json())
+      .then(data => {
+        updateFriendButton(button, data.status, data.requestId);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  }
+
+  function updateFriendButton(button, status, requestId) {
+    const spinner = button.querySelector('.fa-spinner');
+    const btnText = button.querySelector('.btn-text');
+    
+    spinner.style.display = 'none';
+    
+    switch(status) {
+      case 'none':
+        btnText.innerHTML = '<i class="fas fa-user-plus me-1"></i>Agregar';
+        button.className = 'btn btn-primary btn-sm friend-action-btn';
+        button.onclick = () => sendFriendRequest(button.dataset.userId, button);
+        break;
+        
+      case 'sent':
+        btnText.innerHTML = '<i class="fas fa-clock me-1"></i>Enviada';
+        button.className = 'btn btn-warning btn-sm friend-action-btn';
+        button.onclick = () => cancelFriendRequest(requestId, button);
+        break;
+        
+      case 'received':
+        btnText.innerHTML = '<i class="fas fa-check me-1"></i>Responder';
+        button.className = 'btn btn-info btn-sm friend-action-btn';
+        button.onclick = () => window.location.href = '/notifications';
+        break;
+        
+      case 'aceptada':
+        btnText.innerHTML = '<i class="fas fa-check-circle me-1"></i>Amigos';
+        button.className = 'btn btn-success btn-sm friend-action-btn';
+        button.disabled = true;
+        break;
+        
+      case 'rechazada':
+        btnText.innerHTML = '<i class="fas fa-user-plus me-1"></i>Reintentar';
+        button.className = 'btn btn-outline-primary btn-sm friend-action-btn';
+        button.onclick = () => sendFriendRequest(button.dataset.userId, button);
+        break;
+    }
+  }
+
+  function sendFriendRequest(userId, button) {
+    const spinner = button.querySelector('.fa-spinner');
+    const btnText = button.querySelector('.btn-text');
+    
+    spinner.style.display = 'inline';
+    btnText.innerHTML = 'Enviando...';
+    button.disabled = true;
+    
+    fetch(`/friend-request/${userId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        checkFriendshipStatus(userId, button);
+      } else {
+        alert(data.error || 'Error al enviar solicitud');
+        button.disabled = false;
+        spinner.style.display = 'none';
+        btnText.innerHTML = '<i class="fas fa-user-plus me-1"></i>Agregar';
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('Error al enviar solicitud');
+      button.disabled = false;
+      spinner.style.display = 'none';
+      btnText.innerHTML = '<i class="fas fa-user-plus me-1"></i>Agregar';
+    });
+  }
+
+  function cancelFriendRequest(requestId, button) {
+    if (confirm('¿Quieres cancelar esta solicitud?')) {
+      const spinner = button.querySelector('.fa-spinner');
+      const btnText = button.querySelector('.btn-text');
+      
+      spinner.style.display = 'inline';
+      btnText.innerHTML = 'Cancelando...';
+      button.disabled = true;
+      
+      fetch(`/friend-request/${requestId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          checkFriendshipStatus(button.dataset.userId, button);
+        } else {
+          alert(data.error || 'Error al cancelar solicitud');
+          button.disabled = false;
+          spinner.style.display = 'none';
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Error al cancelar solicitud');
+        button.disabled = false;
+        spinner.style.display = 'none';
+      });
+    }
+  }

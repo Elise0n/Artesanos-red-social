@@ -1,0 +1,40 @@
+extends layout
+
+block content
+  .row
+    .col-12
+      .d-flex.justify-content-between.align-items-center.mb-4
+        div
+          h2= album.titulo
+          p.text-muted Por: #{album.nombre} #{album.apellido}
+          if album.descripcion
+            p= album.descripcion
+        
+        a.btn.btn-outline-secondary(href=`/profile/${album.id_usuario}`)
+          i.fas.fa-user.me-2
+          | Ver Perfil
+
+  if images && images.length > 0
+    .row
+      each image in images
+        .col-md-4.col-sm-6.mb-4
+          .card
+            img.card-img-top(src=image.ruta_archivo, alt=image.titulo, style="height: 250px; object-fit: cover;")
+            .card-body
+              h6.card-title= image.titulo || "Sin título"
+              if image.etiquetas
+                .mb-2
+                  each etiqueta in image.etiquetas.split(',')
+                    span.badge.bg-secondary.me-1= "#" + etiqueta
+              
+              .d-flex.justify-content-between.align-items-center
+                small.text-muted
+                  i.fas.fa-comment.me-1
+                  = image.total_comentarios + " comentario" + (image.total_comentarios !== 1 ? "s" : "")
+                
+                a.btn.btn-primary.btn-sm(href=`/image/${image.id_imagen}`) Ver
+  else
+    .text-center.py-5
+      i.fas.fa-images.fa-3x.text-muted.mb-3
+      h4.text-muted Álbum vacío
+      p.text-muted Este álbum aún no tiene imágenes

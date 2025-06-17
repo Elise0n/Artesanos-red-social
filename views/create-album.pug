@@ -1,0 +1,33 @@
+extends layout
+
+block content
+  .row.justify-content-center
+    .col-md-6
+      .card
+        .card-header
+          h3 Crear Nuevo Álbum
+        .card-body
+          form(method="POST")
+            .mb-3
+              label.form-label(for="titulo") Título del Álbum *
+              input.form-control(type="text", id="titulo", name="titulo", required, placeholder="Ej: Mis Cerámicas 2024")
+            
+            .mb-3
+              label.form-label(for="descripcion") Descripción
+              textarea.form-control(id="descripcion", name="descripcion", rows="3", placeholder="Describe tu álbum...")
+            
+            .mb-3
+              label.form-label(for="visibilidad") Visibilidad
+              select.form-control(id="visibilidad", name="visibilidad")
+                option(value="publico") Público - Todos pueden ver el álbum
+                option(value="amigos") Solo Amigos - Solo tus amigos pueden ver el álbum
+            
+            .d-grid
+              button.btn.btn-primary(type="submit")
+                i.fas.fa-folder-plus.me-2
+                | Crear Álbum
+          
+          .text-center.mt-3
+            a.btn.btn-outline-secondary(href="/profile")
+              i.fas.fa-arrow-left.me-2
+              | Volver al Perfil

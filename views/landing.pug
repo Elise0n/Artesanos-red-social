@@ -1,0 +1,35 @@
+extends layout
+
+block content
+  .hero-section.text-center.py-5.mb-5
+    .container
+      h1.display-4.mb-4 Bienvenido a Artesanos.com
+      p.lead.mb-4 La red social donde los artesanos comparten sus creaciones y se conectan con otros apasionados del arte
+      .row.justify-content-center
+        .col-md-6
+          a.btn.btn-primary.btn-lg.me-3(href="/register") Únete Ahora
+          a.btn.btn-outline-primary.btn-lg(href="/login") Iniciar Sesión
+
+  .container
+    .row
+      .col-md-4.text-center.mb-4
+        i.fas.fa-users.fa-3x.text-primary.mb-3
+        h3 Conecta con Artesanos
+        p Encuentra y conecta con otros artesanos que comparten tus intereses y pasiones
+      
+      .col-md-4.text-center.mb-4
+        i.fas.fa-images.fa-3x.text-primary.mb-3
+        h3 Comparte tus Creaciones
+        p Sube fotos de tus obras, organízalas en álbumes y compártelas con tu comunidad
+      
+      .col-md-4.text-center.mb-4
+        i.fas.fa-comments.fa-3x.text-primary.mb-3
+        h3 Recibe Feedback
+        p Obtén comentarios y sugerencias de otros artesanos para mejorar tu arte
+
+  style.
+    .hero-section {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      margin: -1.5rem -15px 0;
+    }

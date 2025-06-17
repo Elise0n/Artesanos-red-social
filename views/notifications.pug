@@ -1,0 +1,77 @@
+extends layout
+
+block content
+  h2.mb-4 Notificaciones
+  
+  if notifications && notifications.length > 0
+    each notification in notifications
+      .card.mb-3(class=notification.visto ? '' : 'border-primary')
+        .card-body
+          .d-flex.justify-content-between.align-items-start
+            div
+              if notification.tipo === 'amistad'
+                i.fas.fa-user-plus.text-primary.me-2
+              else if notification.tipo === 'comentario'
+                i.fas.fa-comment.text-info.me-2
+              
+              span= notification.mensaje
+              
+              if notification.tipo === 'amistad' && notification.solicitud_id
+                .mt-2
+                  button.btn.btn-success.btn-sm.me-2(onclick=`respondFriendRequest(${notification.solicitud_id}, 'accept')`)
+                    i.fas.fa-check.me-1
+                    | Aceptar
+                  button.btn.btn-danger.btn-sm(onclick=`respondFriendRequest(${notification.solicitud_id}, 'reject')`)
+                    i.fas.fa-times.me-1
+                    | Rechazar
+            
+            div.text-end
+              small.text-muted= new Date(notification.fecha).toLocaleString()
+              if !notification.visto
+                .mt-1
+                  button.btn.btn-outline-secondary.btn-sm(onclick=`markAsRead(${notification.id_notificacion})`)
+                    i.fas.fa-eye.me-1
+                    | Marcar como leída
+  else
+    .text-center.py-5
+      i.fas.fa-bell-slash.fa-3x.text-muted.mb-3
+      h4.text-muted No tienes notificaciones
+      p.text-muted Las notificaciones aparecerán aquí cuando otros usuarios interactúen contigo
+
+  script.
+    function markAsRead(notificationId) {
+      fetch(`/notifications/${notificationId}/read`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          location.reload();
+        }
+      })
+      .catch(error => console.error('Error:', error));
+    }
+    
+    function respondFriendRequest(requestId, action) {
+      fetch(`/friend-request/${requestId}/${action}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          location.reload();
+        } else {
+          alert(data.error || 'Error al procesar la solicitud');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Error al procesar la solicitud');
+      });
+    }

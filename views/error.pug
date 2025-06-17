@@ -1,0 +1,35 @@
+extends layout
+
+block content
+  .row.justify-content-center
+    .col-md-6.text-center
+      .card
+        .card-body.py-5
+          if error.status === 404
+            i.fas.fa-search.fa-4x.text-muted.mb-4
+            h1.display-4 404
+            h3.mb-3 Página no encontrada
+          else
+            i.fas.fa-exclamation-triangle.fa-4x.text-warning.mb-4
+            h1.display-4= error.status || 500
+            h3.mb-3= title || "Error del servidor"
+          
+          p.text-muted.mb-4= message || "Ha ocurrido un error inesperado"
+          
+          .d-grid.gap-2.d-md-flex.justify-content-md-center
+            a.btn.btn-primary(href="/") Ir al Inicio
+            button.btn.btn-outline-secondary(onclick="history.back()") Volver Atrás
+          
+          if error.status === 404
+            .mt-4
+              h5 ¿Qué puedes hacer?
+              ul.list-unstyled.text-start
+                li
+                  i.fas.fa-check.text-success.me-2
+                  | Verificar la URL
+                li
+                  i.fas.fa-check.text-success.me-2
+                  | Usar el menú de navegación
+                li
+                  i.fas.fa-check.text-success.me-2
+                  | Buscar contenido específico

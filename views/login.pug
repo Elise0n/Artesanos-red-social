@@ -1,0 +1,24 @@
+extends layout
+
+block content
+  .row.justify-content-center
+    .col-md-4
+      .card
+        .card-header.text-center
+          h3 Iniciar Sesión
+        .card-body
+          form(method="POST")
+            .mb-3
+              label.form-label(for="email") Email
+              input.form-control(type="email", id="email", name="email", required)
+            
+            .mb-3
+              label.form-label(for="password") Contraseña
+              input.form-control(type="password", id="password", name="password", required)
+            
+            .d-grid
+              button.btn.btn-primary(type="submit") Iniciar Sesión
+          
+          .text-center.mt-3
+            p ¿No tienes cuenta? 
+              a(href="/register") Regístrate aquí
