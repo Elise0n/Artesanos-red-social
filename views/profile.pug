@@ -22,6 +22,11 @@ block content
             .mb-3
               h6 Antecedentes:
               p= profileUser.antecedentes
+          form(method="POST", action="/perfil", enctype="multipart/form-data", style="margin-top: 20px;")
+            label(for="imagen_perfil") Cambiar imagen de perfil:
+            input(type="file", name="imagen_perfil", accept="image/*")
+            br
+            button.btn.btn-primary(type="submit") Guardar cambios
           
           if !isOwnProfile
             if !isFriend
