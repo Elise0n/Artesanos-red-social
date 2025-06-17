@@ -1,42 +1,47 @@
 const express = require("express")
 const router = express.Router()
 const userController = require("../controllers/userController")
-const { requireAuth } = require("../middleware/auth")
 const multer = require("multer")
 const path = require("path")
 const fs = require("fs")
+const requireAuth = require("../middleware/auth")
+const db = require("../config/database")
 
-// Configuración de multer para imagen de perfil
+
+// Configuración de multer
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, "public/uploads/"),
   filename: (req, file, cb) => {
-    const uniqueName = `perfil_${req.session.user.id}_${Date.now()}${path.extname(file.originalname)}`
-    cb(null, uniqueName)
+    const nombre = `perfil_${req.session.user.id}_${Date.now()}${path.extname(file.originalname)}`
+    cb(null, nombre)
   },
 })
 const upload = multer({ storage })
 
-// Ruta POST para actualizar perfil
-router.post("/perfil", requireAuth, upload.single("imagen_perfil"), async (req, res) => {
-  if (req.file) {
-    const nuevaImagen = req.file.filename
-    const db = require("../config/database")
+//Ruta para actualizar imagen de perfil
+router.post("/perfil", requireAuth, upload.single("imagen_perfil"), (req, res) => {
+  if (!req.file) {
+    req.flash("error", "Debes seleccionar una imagen.")
+    return res.redirect("back")
+  }
 
-    const sql = "UPDATE usuario SET imagen_perfil = ? WHERE id_usuario = ?"
-    db.query(sql, [nuevaImagen, req.session.user.id], (err) => {
+  const nuevaImagen = req.file.filename
+  const id_usuario = req.session.user.id
+
+  db.query(
+    "UPDATE usuario SET imagen_perfil = ? WHERE id_usuario = ?",
+    [nuevaImagen, id_usuario],
+    (err) => {
       if (err) {
         console.error(err)
-        req.flash("error", "No se pudo actualizar la imagen.")
+        req.flash("error", "Error al actualizar la imagen.")
       } else {
-        req.session.user.imagen_perfil = nuevaImagen // actualizar sesión
-        req.flash("success", "Imagen de perfil actualizada.")
+        req.session.user.imagen_perfil = nuevaImagen
+        req.flash("success", "Imagen actualizada correctamente.")
       }
-      res.redirect("/perfil")
-    })
-  } else {
-    req.flash("error", "No se seleccionó ninguna imagen.")
-    res.redirect("/perfil")
-  }
+      res.redirect("back")
+    }
+  )
 })
 
 // Rutas de usuarios
