@@ -4,7 +4,7 @@ block content
   .row
     .col-md-8
       h2.mb-4 Feed de Imágenes
-      
+
       if images && images.length > 0
         each image in images
           .card.mb-4
@@ -16,16 +16,16 @@ block content
               div
                 h6.mb-0= image.nombre + " " + image.apellido
                 small.text-muted= image.album_titulo
-            
+
             img.card-img-top(src=image.ruta_archivo, alt=image.titulo, style="max-height: 500px; object-fit: cover;")
-            
+
             .card-body
               h5.card-title= image.titulo
               if image.etiquetas
                 .mb-2
                   each etiqueta in image.etiquetas.split(',')
                     span.badge.bg-secondary.me-1= "#" + etiqueta
-              
+
               .d-flex.justify-content-between.align-items-center
                 div
                   button.btn.btn-outline-primary.btn-sm.me-2
@@ -33,9 +33,8 @@ block content
                     = image.total_likes || 0
                   button.btn.btn-outline-secondary.btn-sm.ver-comentarios(data-id=image.id_imagen)
                     i.fas.fa-comments.me-1
-                    |#{image.total_comentarios || 0}
+                    | #{image.total_comentarios || 0}
 
-                
                 a.btn.btn-primary.btn-sm(href=`/image/${image.id_imagen}`) Ver Detalles
       else
         .text-center.py-5
@@ -64,15 +63,16 @@ block content
           h5.mb-0 Estadísticas
         .card-body
           p.mb-1
-            strong Imágenes subidas: 
+            strong Imágenes subidas:
             span.text-primary 0
           p.mb-1
-            strong Comentarios recibidos: 
+            strong Comentarios recibidos:
             span.text-primary 0
           p.mb-0
-            strong Amigos: 
+            strong Amigos:
             span.text-primary 0
-            // Modal para mostrar comentarios
+
+          // Modal para mostrar comentarios
           div.modal.fade#modalComentarios(tabindex="-1")
             div.modal-dialog.modal-lg
               div.modal-content
@@ -81,10 +81,12 @@ block content
                   button.btn-close(type="button", data-bs-dismiss="modal")
                 div.modal-body
                   div#comentariosContenido.text-start
-                  form#formComentario(method="POST", action=`/image/${image.id_imagen}/comments`)
+                  form#formComentario(method="POST")
                     .input-group.mt-3
                       input.form-control(type="text", name="comentario", id="comentarioInput", placeholder="Escribí un comentario...")
                       button.btn.btn-primary(type="submit") Enviar
                 div.modal-footer
                   button.btn.btn-secondary(type="button", data-bs-dismiss="modal") Cerrar
-script(src="/js/feed.js") 
+
+          // Script JS para el modal
+          script(src="/js/feed.js")
