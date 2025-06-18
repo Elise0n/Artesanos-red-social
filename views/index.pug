@@ -3,7 +3,7 @@ extends layout
 block content
   .row
     .col-md-8
-      h2.mb-4 Feed de Imágenes
+      h2.mb-4 Inicio
 
       if images && images.length > 0
         each image in images
@@ -39,31 +39,31 @@ block content
       else
         .text-center.py-5
           i.fas.fa-images.fa-3x.text-muted.mb-3
-          h4.text-muted No hay imágenes para mostrar
+          h4.text-muted No hay imagenes para mostrar
           p.text-muted Sigue a otros artesanos o sube tu primera imagen
           a.btn.btn-primary(href="/upload") Subir Primera Imagen
 
     .col-md-4
       .card
         .card-header
-          h5.mb-0 Acciones Rápidas
+          h5.mb-0 Acciones Rapidas
         .card-body
           a.btn.btn-primary.w-100.mb-2(href="/upload")
             i.fas.fa-plus.me-2
             | Subir Imagen
           a.btn.btn-outline-primary.w-100.mb-2(href="/create-album")
             i.fas.fa-folder-plus.me-2
-            | Crear Álbum
+            | Crear Album
           a.btn.btn-outline-secondary.w-100(href="/search")
             i.fas.fa-search.me-2
             | Buscar Usuarios
 
       .card.mt-4
         .card-header
-          h5.mb-0 Estadísticas
+          h5.mb-0 Estadisticas
         .card-body
           p.mb-1
-            strong Imágenes subidas:
+            strong Imagenes subidas:
             span.text-primary 0
           p.mb-1
             strong Comentarios recibidos:

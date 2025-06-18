@@ -75,3 +75,70 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".ver-comentarios").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const id = btn.getAttribute("data-id");
+      const modal = new bootstrap.Modal(document.getElementById("modalComentarios"));
+      const contenido = document.getElementById("comentariosContenido");
+      const form = document.getElementById("formComentario");
+
+      // Limpio comentarios previos
+      contenido.innerHTML = "<p>Cargando comentarios...</p>";
+
+      // Cargo comentarios vía fetch
+      const res = await fetch(`/api/image/${id}/comments`);
+      const data = await res.json();
+
+      if (data.success) {
+        if (data.comentarios.length > 0) {
+          contenido.innerHTML = "";
+          data.comentarios.forEach((com) => {
+            const div = document.createElement("div");
+            div.classList.add("mb-2", "border-bottom", "pb-2");
+            div.innerHTML = `<strong>${com.nombre}:</strong> ${com.texto}`;
+
+            // Si el comentario es tuyo, mostramos botón eliminar
+            if (com.propietario) {
+              const btnDel = document.createElement("button");
+              btnDel.classList.add("btn", "btn-sm", "btn-danger", "ms-2");
+              btnDel.innerText = "Eliminar";
+              btnDel.onclick = async () => {
+                const r = await fetch(`/api/image/${id}/comments/${com.id}`, {
+                  method: "DELETE",
+                });
+                const result = await r.json();
+                if (result.success) div.remove();
+              };
+              div.appendChild(btnDel);
+            }
+
+            contenido.appendChild(div);
+          });
+        } else {
+          contenido.innerHTML = "<p class='text-muted'>No hay comentarios aún.</p>";
+        }
+      } else {
+        contenido.innerHTML = "<p class='text-danger'>Error al cargar comentarios.</p>";
+      }
+
+      // Manejo de nuevo comentario
+      form.onsubmit = async (e) => {
+        e.preventDefault();
+        const texto = document.getElementById("comentarioInput").value;
+        const r = await fetch(`/image/${id}/comments`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ comentario: texto }),
+        });
+        const result = await r.json();
+        if (result.success) {
+          document.querySelector(`.ver-comentarios[data-id="${id}"]`).click(); // recarga comentarios
+        }
+      };
+
+      modal.show();
+    });
+  });
+});

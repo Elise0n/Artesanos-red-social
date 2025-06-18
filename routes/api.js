@@ -227,7 +227,7 @@ router.post("/image/:id/comments", requireAuth, (req, res) => {
 });
 
 // API para cargar comentarios de una imagen
-router.get("/image/:id/comments", requireAuth, (req, res) => {
+router.get("/api/image/:id/comments", requireAuth, (req, res) => {
   const id = req.params.id;
   const id_usuario = req.session.user.id;
 
@@ -248,7 +248,7 @@ router.get("/image/:id/comments", requireAuth, (req, res) => {
 
 
 // API para eliminar comentario (solo si es del mismo usuario)
-router.delete("/comentarios/:id", requireAuth, (req, res) => {
+router.delete("/api/comentarios/:id", requireAuth, (req, res) => {
   const id = req.params.id;
   const id_usuario = req.session.user.id;
 
