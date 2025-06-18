@@ -3,17 +3,16 @@ const router = express.Router()
 const userController = require("../controllers/userController")
 const multer = require("multer")
 const path = require("path")
-const fs = require("fs")
-const requireAuth = require("../middleware/auth")
-const db = require("../config/database")
-
+const { requireAuth } = require("../middleware/auth")
+const { promiseDb } = require("../config/database")
+const upload = require("../middleware/upload")
 
 // Configuración de multer
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, "public/uploads/"),
   filename: (req, file, cb) => {
-    const nombre = `perfil_${req.session.user.id}_${Date.now()}${path.extname(file.originalname)}`
-    cb(null, nombre)
+    const nombreArchivo = `perfil_${req.session.user.id}_${Date.now()}${path.extname(file.originalname)}`
+    cb(null, nombreArchivo)
   },
 })
 const upload = multer({ storage })
@@ -28,20 +27,20 @@ router.post("/perfil", requireAuth, upload.single("imagen_perfil"), (req, res) =
   const nuevaImagen = req.file.filename
   const id_usuario = req.session.user.id
 
-  db.query(
+  promiseDb.execute(
     "UPDATE usuario SET imagen_perfil = ? WHERE id_usuario = ?",
     [nuevaImagen, id_usuario],
-    (err) => {
-      if (err) {
-        console.error(err)
-        req.flash("error", "Error al actualizar la imagen.")
-      } else {
-        req.session.user.imagen_perfil = nuevaImagen
-        req.flash("success", "Imagen actualizada correctamente.")
-      }
-      res.redirect("/perfil")
-    }
   )
+    .then(() => {
+      req.session.user.imagen_perfil = nuevaImagen
+      req.flash("success", "Imagen actualizada correctamente.")
+      res.redirect("/perfil")
+    })
+    .catch((error) => {
+      console.error("Error al actualizar la imagen:", error)
+      req.flash("error", "Error al actualizar la imagen.")
+      res.redirect("/perfil")
+    })
 })
 
 // Rutas de usuarios
