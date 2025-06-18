@@ -5,7 +5,7 @@ const multer = require("multer")
 const path = require("path")
 const { requireAuth } = require("../middleware/auth")
 const { promiseDb } = require("../config/database")
-const upload = require("../middleware/upload")
+
 
 // Configuración de multer
 const storage = multer.diskStorage({
