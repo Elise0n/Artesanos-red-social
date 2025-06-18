@@ -18,7 +18,7 @@ const userController = {
 
       const user = userResult[0]
 
-      // Obtener álbumes del usuario
+      // Obtener albumes del usuario
       const [albums] = await promiseDb.execute(
         `
         SELECT a.*, COUNT(i.id_imagen) as total_images
@@ -59,7 +59,7 @@ const userController = {
     }
   },
 
-  // Buscar usuarios e imágenes
+  // Buscar usuarios e imagenes
   search: async (req, res) => {
     try {
       const { q } = req.query
@@ -81,7 +81,7 @@ const userController = {
         [searchTerm, searchTerm, searchTerm, req.session.user.id],
       )
 
-      // Buscar imágenes
+      // Buscar imagenes
       const [images] = await promiseDb.execute(
         `
         SELECT i.*, a.titulo as album_titulo, u.nombre, u.apellido, u.imagen_perfil
@@ -103,10 +103,10 @@ const userController = {
         query: q,
       })
     } catch (error) {
-      console.error("Error en búsqueda:", error)
+      console.error("Error en busqueda:", error)
       res.status(500).render("error", {
         title: "Error del servidor",
-        message: "Error al realizar la búsqueda",
+        message: "Error al realizar la busqueda",
       })
     }
   },

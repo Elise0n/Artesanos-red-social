@@ -330,3 +330,4 @@ function reportContent(type, id, reason) {
       showNotification("Error al enviar el reporte", "error")
     })
 }
+

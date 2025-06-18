@@ -22,11 +22,11 @@ const authController = {
       const [existingUser] = await promiseDb.execute("SELECT id_usuario FROM usuario WHERE email = ?", [email])
 
       if (existingUser.length > 0) {
-        req.flash("error", "El email ya está registrado")
+        req.flash("error", "El email ya esta registrado")
         return res.redirect("/register")
       }
 
-      // Encriptar contraseña
+      // Encriptar contraseña
       const hashedPassword = await bcrypt.hash(password, 10)
       const imagenPerfil = req.file ? `/uploads/${req.file.filename}` : null
 
@@ -56,7 +56,7 @@ const authController = {
       const { email, password } = req.body
 
       if (!email || !password) {
-        req.flash("error", "Email y contraseña son requeridos")
+        req.flash("error", "Email y contraseña son requeridos")
         return res.redirect("/login")
       }
 
@@ -64,21 +64,21 @@ const authController = {
       const [users] = await promiseDb.execute("SELECT * FROM usuario WHERE email = ?", [email])
 
       if (users.length === 0) {
-        req.flash("error", "Credenciales inválidas")
+        req.flash("error", "Credenciales invalidas")
         return res.redirect("/login")
       }
 
       const user = users[0]
 
-      // Verificar contraseña
+      // Verificar contraseña
       const isValidPassword = await bcrypt.compare(password, user.contraseña)
 
       if (!isValidPassword) {
-        req.flash("error", "Credenciales inválidas")
+        req.flash("error", "Credenciales invalidas")
         return res.redirect("/login")
       }
 
-      // Crear sesión
+      // Crear sesion
       req.session.user = {
         id: user.id_usuario,
         nombre: user.nombre,
@@ -90,16 +90,16 @@ const authController = {
       res.redirect("/")
     } catch (error) {
       console.error("Error en login:", error)
-      req.flash("error", "Error al iniciar sesión")
+      req.flash("error", "Error al iniciar sesion")
       res.redirect("/login")
     }
   },
 
-  // Cerrar sesión
+  // Cerrar sesion
   logout: (req, res) => {
     req.session.destroy((err) => {
       if (err) {
-        console.error("Error al cerrar sesión:", err)
+        console.error("Error al cerrar sesion:", err)
       }
       res.redirect("/")
     })

@@ -105,7 +105,7 @@ const friendController = {
       const { requestId, action } = req.params
 
       if (!["accept", "reject"].includes(action)) {
-        return res.status(400).json({ error: "Acción inválida" })
+        return res.status(400).json({ error: "Accion invalida" })
       }
 
       const estado = action === "accept" ? "aceptada" : "rechazada"

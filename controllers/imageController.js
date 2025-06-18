@@ -4,7 +4,7 @@ const imageController = {
   // Mostrar formulario de subida
   showUpload: async (req, res) => {
     try {
-      // Obtener álbumes del usuario
+      // Obtener albumes del usuario
       const [albums] = await promiseDb.execute(
         "SELECT * FROM album WHERE id_usuario = ? ORDER BY fecha_creacion DESC",
         [req.session.user.id],

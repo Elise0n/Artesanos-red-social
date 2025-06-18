@@ -1,11 +1,11 @@
 const { promiseDb } = require("../config/database")
 
 const homeController = {
-  // Página principal
+  // Pagina principal
   index: async (req, res) => {
     try {
       if (req.session.user) {
-        // Obtener imágenes del feed
+        // Obtener imagenes del feed
         const [images] = await promiseDb.execute(
           `
           SELECT i.*, a.titulo as album_titulo, u.nombre, u.apellido, u.imagen_perfil,
@@ -46,10 +46,10 @@ const homeController = {
         res.render("landing")
       }
     } catch (error) {
-      console.error("Error en página principal:", error)
+      console.error("Error en pagina principal:", error)
       res.status(500).render("error", {
         title: "Error del servidor",
-        message: "Error al cargar la página principal",
+        message: "Error al cargar la pagina principal",
       })
     }
   },

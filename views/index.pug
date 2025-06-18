@@ -31,9 +31,10 @@ block content
                   button.btn.btn-outline-primary.btn-sm.me-2
                     i.fas.fa-heart.me-1
                     = image.total_likes || 0
-                  button.btn.btn-outline-secondary.btn-sm
-                    i.fas.fa-comment.me-1
-                    = image.total_comentarios || 0
+                  button.btn.btn-outline-secondary.btn-sm.ver-comentarios(data-id=image.id_imagen)
+                    i.fas.fa-comments.me-1
+                    |#{image.total_comentarios || 0}
+
                 
                 a.btn.btn-primary.btn-sm(href=`/image/${image.id_imagen}`) Ver Detalles
       else
@@ -71,3 +72,19 @@ block content
           p.mb-0
             strong Amigos: 
             span.text-primary 0
+            // Modal para mostrar comentarios
+          div.modal.fade#modalComentarios(tabindex="-1")
+            div.modal-dialog.modal-lg
+              div.modal-content
+                div.modal-header
+                  h5.modal-title Comentarios
+                  button.btn-close(type="button", data-bs-dismiss="modal")
+                div.modal-body
+                  div#comentariosContenido.text-start
+                  form#formComentario(method="POST", action=`/image/${image.id_imagen}/comments`)
+                    .input-group.mt-3
+                      input.form-control(type="text", name="comentario", id="comentarioInput", placeholder="Escribí un comentario...")
+                      button.btn.btn-primary(type="submit") Enviar
+                div.modal-footer
+                  button.btn.btn-secondary(type="button", data-bs-dismiss="modal") Cerrar
+script(src="/js/feed.js") 

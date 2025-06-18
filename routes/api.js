@@ -33,7 +33,7 @@ router.get("/feed", requireAuth, async (req, res) => {
       FROM imagen i
       JOIN album a ON i.id_album = a.id_album
       JOIN usuario u ON a.id_usuario = u.id_usuario
-      LEFT JOIN imagen_etiqueta ie ON i.id_imagen = ie.id_imagen
+      LEFT JOIN imagen_etiqueta ie ON i.id_imagen = ie.imagen_id
       LEFT JOIN etiqueta e ON ie.id_etiqueta = e.id_etiqueta
       WHERE i.visibilidad = 'publica' OR 
             (i.visibilidad = 'amigos' AND EXISTS (
@@ -205,5 +205,64 @@ router.get("/user-stats", requireAuth, async (req, res) => {
     res.status(500).json({ error: "Error del servidor" })
   }
 })
+
+// API para comentarios
+router.post("/image/:id/comments", requireAuth, (req, res) => {
+  const { comentario } = req.body;
+  const id = req.params.id;
+  const id_usuario = req.session.user.id;
+
+  if (!comentario || !comentario.trim()) {
+    return res.json({ success: false, error: "Comentario vacío" });
+  }
+
+  db.query(
+    "INSERT INTO comentario (imagen_id, id_usuario, texto, fecha) VALUES (?, ?, ?, NOW())",
+    [id, id_usuario, comentario],
+    (err) => {
+      if (err) return res.json({ success: false, error: "Error al guardar" });
+      res.json({ success: true });
+    }
+  );
+});
+
+// API para cargar comentarios de una imagen
+router.get("/image/:id/comments", requireAuth, (req, res) => {
+  const id = req.params.id;
+  const id_usuario = req.session.user.id;
+
+  db.query(
+    `SELECT c.id_comentario, c.texto, c.fecha, u.nombre, u.apellido,
+            c.id_usuario = ? AS esPropio
+     FROM comentario c
+     JOIN usuario u ON c.id_usuario = u.id_usuario
+     WHERE c.imagen_id = ?
+     ORDER BY c.fecha DESC`,
+    [id_usuario, id],
+    (err, resultados) => {
+      if (err) return res.json({ success: false, error: "Error al obtener comentarios" });
+      res.json({ success: true, comentarios: resultados });
+    }
+  );
+});
+
+
+// API para eliminar comentario (solo si es del mismo usuario)
+router.delete("/comentarios/:id", requireAuth, (req, res) => {
+  const id = req.params.id;
+  const id_usuario = req.session.user.id;
+
+  db.query(
+    "DELETE FROM comentario WHERE id_comentario = ? AND id_usuario = ?",
+    [id, id_usuario],
+    (err) => {
+      if (err) return res.json({ success: false, error: "No se pudo eliminar" });
+      res.json({ success: true });
+    }
+  );
+});
+
+
+
 
 module.exports = router

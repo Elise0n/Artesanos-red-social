@@ -46,7 +46,7 @@ const notificationController = {
     }
   },
 
-  // Marcar notificación como leída
+  // Marcar notificacion como leida
   markAsRead: async (req, res) => {
     try {
       const { id } = req.params
@@ -62,12 +62,12 @@ const notificationController = {
 
       res.json({ success: true })
     } catch (error) {
-      console.error("Error al marcar notificación:", error)
+      console.error("Error al marcar notificacion:", error)
       res.status(500).json({ error: "Error del servidor" })
     }
   },
 
-  // Marcar todas las notificaciones como leídas
+  // Marcar todas las notificaciones como leidas
   markAllAsRead: async (req, res) => {
     try {
       await promiseDb.execute("UPDATE notificacion SET visto = 1 WHERE id_usuario = ? AND visto = 0", [
@@ -81,7 +81,7 @@ const notificationController = {
     }
   },
 
-  // Eliminar notificación
+  // Eliminar notificacion
   deleteNotification: async (req, res) => {
     try {
       const { id } = req.params
@@ -92,12 +92,12 @@ const notificationController = {
       )
 
       if (result.affectedRows === 0) {
-        return res.status(404).json({ error: "Notificación no encontrada" })
+        return res.status(404).json({ error: "Notificacion no encontrada" })
       }
 
       res.json({ success: true })
     } catch (error) {
-      console.error("Error al eliminar notificación:", error)
+      console.error("Error al eliminar notificacion:", error)
       res.status(500).json({ error: "Error del servidor" })
     }
   },
