@@ -59,8 +59,8 @@ Una plataforma web completa diseñada para conectar artesanos, permitiéndoles c
 
 1. **Clonar el repositorio**
 \`\`\`bash
-git clone https://github.com/tu-usuario/artesanos-social-network.git
-cd artesanos-social-network
+git clone https://github.com/Elise0n/Artesanos-red-social.git
+cd Artesanos-red-social
 \`\`\`
 
 2. **Instalar dependencias**
@@ -100,7 +100,7 @@ npm start
 ## Estructura del Proyecto
 
 \`\`\`
-artesanos-social-network/
+Artesanos-red-social/
 ├── public/
 │   ├── css/
 │   │   └── style.css
@@ -187,14 +187,6 @@ artesanos-social-network/
 - **Almacenamiento**: AWS S3 para imágenes
 - **CDN**: CloudFlare para assets estáticos
 
-## Contribución
-
-1. Fork el proyecto
-2. Crear rama para nueva funcionalidad (`git checkout -b feature/nueva-funcionalidad`)
-3. Commit cambios (`git commit -am 'Agregar nueva funcionalidad'`)
-4. Push a la rama (`git push origin feature/nueva-funcionalidad`)
-5. Crear Pull Request
-
 ## Licencia
 
 Este proyecto está bajo la Licencia MIT. Ver archivo `LICENSE` para más detalles.
@@ -205,8 +197,6 @@ Para reportar bugs o solicitar nuevas funcionalidades, por favor crear un issue 
 
 ## Autor
 
-Desarrollado como Trabajo Práctico Integrador para la materia de Base de Datos.
-
----
+Desarrollado como Trabajo Práctico Integrador para la materia Laboratorio web II.
 
 **Artesanos.com** - Conectando artesanos, inspirando creatividad 🎨
